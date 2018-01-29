@@ -18,8 +18,8 @@
     */
    // GLHandler *glHandler = new GLHandler();
    // LSP3D * lsp3d = new LSP3D();
-   // FileHandler *fileHandler = new FileHandler(argv[1]);
-
+   FileHandler *fileHandler = new FileHandler(argv[1]);
+   delete fileHandler;
    /** @brief get fileHandler file, execute LSP and display using glHandler
     */
    // glHandler->display(TODO - LSP calculations)
