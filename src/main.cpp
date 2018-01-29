@@ -16,9 +16,25 @@
    }
    /** @brief Instantiate LSP, GLHandler and FileHandler, already reading input file
     */
-   // GLHandler *glHandler = new GLHandler();
-   // LSP3D * lsp3d = new LSP3D();
-   FileHandler *fileHandler = new FileHandler(argv[1]);
+   FileHandler *fileHandler = new FileHandler();
+   DataFrame *df = fileHandler->read_file(argv[1]);
+   
+   if(fileHandler->get_file_type() == "csv")
+   {
+      LSP3D *lsp3d = new LSP3D();    
+      DataFrame *aux = lsp3d->execute(df);
+      delete df;
+      df = aux;
+      aux = NULL;
+   } 
+   else if(fileHandler->get_file_type() != "prj")
+     std::cerr<<"";
+
+   GLHandler *glHandler = new GLHandler();
+   glHandler->plot(df);
+  
+   delete glHandler;
+   delete df;
    delete fileHandler;
    /** @brief get fileHandler file, execute LSP and display using glHandler
     */

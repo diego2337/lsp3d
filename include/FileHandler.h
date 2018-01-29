@@ -1,16 +1,18 @@
 #ifndef _FILEHANDLER_H_
 #define _FILEHANDLER_H_
-  #include <stdio.h>
-  #include <stdlib.h>
-  #include <string.h>
+  #include <cstdio>
+  #include <cstdlib>
+  #include <cstring>
+  #include <string>
+  #include "DataFrame.h"
 
   /**
    * @struct Struct containing rows names and coordinates
    */
   typedef struct _row{
-    int numCols;
     char *rowName;
     double *values;
+    double label;
   }row;
 
   /**
@@ -26,17 +28,19 @@
      FileHandler(char*);
      ~FileHandler();
      char *read(FILE*, char);
-     int toNum(char*);
-     double toDouble(char*);
      char *getMatrixType();
      void setMatrixType(char*);
      int getNumRows();
+     DataFrame *read_file(char *);
+     std::string get_file_type() const;
   private:
     /**
      * @brief Private members and method signatures.
      */
      char *matrixType = NULL;
+     int numCols;     
      int numRows;
      row *rows;
+     std::string file_type;
   };
 #endif
