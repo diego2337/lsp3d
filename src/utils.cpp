@@ -1,5 +1,9 @@
 #include "../include/utils.h"
 
+/**
+ * @public Dynamically deallocates a string and set it to NULL.
+ * @param str String to be deallocated.
+ */
 void free_string(char **str)
 {
   free(*str);

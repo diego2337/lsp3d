@@ -6,8 +6,7 @@
   #include <iostream>
   #include <cstdio>
   #include <cstdlib>
-  #include <GL/glut.h>
-  #include "utils.h"  
+  #include "utils.h"
   #include "DataFrame.h"
   #include "FileHandler.h"
   #include "GLHandler.h"

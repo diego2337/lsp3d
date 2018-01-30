@@ -50,11 +50,11 @@ FileHandler::FileHandler(char *file)
       for(j = 0; j < this->numCols; j++)
       {
 //         (j+1) == this->numCols ? str = read(f, '\n') : str = read(f, ';');
-        str = read(f, ';');        
+        str = read(f, ';');
         this->rows[i].values[j] = toDouble(str);
         free_string(&str);
       }
-      
+
       str = read(f, '\n');
       this->rows[i].label = toDouble(str);
       free_string(&str);
