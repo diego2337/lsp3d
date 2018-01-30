@@ -19,15 +19,15 @@
    FileHandler *fileHandler = new FileHandler();
    DataFrame *df = fileHandler->read_file(argv[1]);
 
-   if(fileHandler->get_file_type() == "csv")
+   if(df->get_matrixType() == "csv")
    {
-      LSP3D *lsp3d = new LSP3D();
+      LSP3D *lsp3d   = new LSP3D();
       DataFrame *aux = lsp3d->execute(df);
       delete df;
       df = aux;
       aux = NULL;
    }
-   else if(fileHandler->get_file_type() != "prj")
+   else if(df->get_matrixType() != "prj")
      std::cerr<<"";
 
    GLHandler *glHandler = new GLHandler(argc, argv);
