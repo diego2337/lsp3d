@@ -7,15 +7,6 @@
   #include "DataFrame.h"
 
   /**
-   * @struct Struct containing rows names and coordinates
-   */
-  typedef struct _row{
-    char *rowName;
-    double *values;
-    double label;
-  }row;
-
-  /**
    * @class FileHandler class, used for handling input data in ".prj" format.
    */
   class FileHandler
@@ -28,8 +19,6 @@
      FileHandler(char*);
      ~FileHandler();
      char *read(FILE*, char);
-     char *getMatrixType();
-     void setMatrixType(char*);
      int getNumRows();
      DataFrame *read_file(char *);
      std::string get_file_type() const;
@@ -37,10 +26,10 @@
     /**
      * @brief Private members and method signatures.
      */
-     char *matrixType = NULL;
-     int numCols;     
-     int numRows;
-     row *rows;
-     std::string file_type;
+    char delimiter;
+     
+    void read_csv_header(std::ifstream &file, DataFrame *df);
+    void read_prj_header(std::ifstream &file, DataFrame *df);
+    void read_data(std::ifstream &file, DataFrame *df);    
   };
 #endif
