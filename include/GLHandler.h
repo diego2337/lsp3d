@@ -1,11 +1,10 @@
 #ifndef _GL_HANDLER_H
 #define _GL_HANDLER_H
-  #include <stdio.h>
+  #include <iostream>
   #include <math.h>
-  #include <time.h>
   #include <GL/glut.h>
   #include "DataFrame.h"
-  #define PI 3.1415926535897932384626433832795
+  #include "utils.h"
 
   /**
    * @class GLHandler class, used for registering glut callbacks and plotting received data with OpenGL.
@@ -22,11 +21,10 @@
       static void displayCallback();
       static void mouseCallback(int,int,int,int);
       static void keyboardCallback(unsigned char,int,int);
-      void setPoints();
+      void setPoints(DataFrame *df);
   private:
       /**
        * @brief Private members and method signatures.
        */
-      DataFrame *df;
   };
 #endif

@@ -6,6 +6,7 @@
  */
 double **m = NULL;
 double maxX = 0.000000000, maxY = 0.000000000;
+int mRows = 0, mCols = 0;
 
 /**
  * @constructor Constructor for GLHandler. Initialize glut callbacks.
@@ -21,7 +22,7 @@ GLHandler::GLHandler(int argc, char **argv)
   glutInitWindowSize(640, 512);
   glutCreateWindow("LSP3D");
   /** Initialize DataFrame object */
-  this->df = NULL;
+  // this->df = NULL;
 }
 
 /**
@@ -39,8 +40,8 @@ GLHandler::~GLHandler()
 void GLHandler::plot(DataFrame *df)
 {
   /** Shallow copy incoming DataFrame to GLHandler atributte DataFrame */
-  this->df = df;
-  this->setPoints();
+  // this->df = df;
+  this->setPoints(df);
   gluLookAt((maxX)/2.0, (maxY)/2.0, 1.0, (maxX)/2.0, (maxY)/2.0, 0.0, 0.0, 1.0, 0.0);
   glutDisplayFunc(this->displayCallback);
   // glutIdleFunc(this->displayCallback);
@@ -61,30 +62,37 @@ double fRand(double fMin, double fMax)
 
 /**
  * @public Set points resulting from LSP projection in OpenGL scene.
+ * @param df DataFrame object containing data resulting from LSP projection.
  */
-void GLHandler::setPoints()
+void GLHandler::setPoints(DataFrame *df)
 {
   int i, j;
+  row r;
   /** Only set points if DataFrame object is pointing to a DataFrame object containing data points */
-  /** TODO - Commenting this if for the sake of testing */
-  // if(this->df)
-  // {
-    /** TODO - treat DataFrame object; generating dummy points */
-    m = new double*[1000];
-    srand(time(NULL));
-    for(i = 0; i < 1000; i++)
+  if(df)
+  {
+    /** Assigning values to global matrix due to static callback function */
+    mRows = df->get_config_numRows();
+    m = new double*[mRows];
+    for(i = 0; i < mRows; i++)
     {
-      m[i] = new double[3];
-      for(j = 0; j < 3; j++)
+      mCols = df->get_config_numCols();
+      /** m matrix will also store labels */
+      m[i] = new double[mCols-1];
+      r = df->get_row(i);
+      for(j = 0; j < mCols-1; j++)
       {
-        m[i][j] = fRand(0.0, 1.0);
+        ((j+1) == (mCols-1)) ? m[i][j] = r.label : m[i][j] = r.values[j];
         if(j == 0 && maxX < m[i][j]) maxX = m[i][j];
         if(j == 1 && maxY < m[i][j]) maxY = m[i][j];
-        // if(maxX < m[i][0]) maxX = m[i][0];
-        // if(maxY < m[i][1]) maxY = m[i][1];
       }
+      // if(maxX < m[i][0]) maxX = m[i][0];
+      // if(maxY < m[i][1]) maxY = m[i][1];
+      // for(j = 0; j < 3; j++)
+      // {
+      // }
     }
-  // }
+  }
 }
 
 /**
@@ -97,15 +105,17 @@ void GLHandler::displayCallback()
   glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
   /** Clear buffer */
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  /** Set initial drawing color */
-  glColor3f(0.6f, 0.0f, 0.0f);
   /** Set scene according to DataFrame object points */
-  for(int i = 0; i < 1000; i++)
+  for(int i = 0; i < mRows; i++)
   {
+    /** Set initial drawing color */
+    double *vector = mapToColor(m[i][3]);
+    glColor3f(vector[0], vector[1], vector[2]);
+    delete [] vector;
     glBegin(GL_POLYGON);
-      for(double j = 0.0; j < 2 * PI; j += PI / 16)
+      for(double j = 0.0; j < 2 * M_PI; j += M_PI / 32)
       {
-          glVertex3f((cos(j) * 0.01) + m[i][0], (sin(j) * 0.01) + m[i][1], 0.0 + m[i][2]);
+        glVertex3f((cos(j) * 0.01) + m[i][0], (sin(j) * 0.01) + m[i][1], 0.0 + m[i][2]);
       }
     glEnd();
     // glVertex3f(m[i][0], m[i][1], m[i][2]);

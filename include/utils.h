@@ -18,4 +18,11 @@ int toInt(char *number);
  */
 double toDouble(char *number);
 
+/**
+ * @public Return a color vector given a number.
+ * @param number Number for color mapping.
+ * @returns Vector of length 3 containing specific color for that number.
+ */
+double *mapToColor(double number);
+
 #endif

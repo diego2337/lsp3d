@@ -90,12 +90,14 @@ void FileHandler::read_prj_header(std::ifstream &file, DataFrame *df)
       }
       case 1:
       {
-        df->set_config_numRows(toInt((char*) line.c_str()));
+        // df->set_config_numRows(toInt((char*) line.c_str()));
+        df->set_config_numRows(atoi((char*) line.c_str()));
         break;
       }
       case 2:
       {
-        df->set_config_numCols(toInt((char*) line.c_str()));
+        // df->set_config_numCols(toInt((char*) line.c_str()));
+        df->set_config_numCols(atoi((char*) line.c_str()));
         break;
       }
       default: break;
@@ -131,7 +133,8 @@ void FileHandler::read_data(std::ifstream &file, DataFrame *df)
 
       if(index == std::string::npos)
       {
-        r.label = toDouble((char*) line.c_str());
+        // r.label = toDouble((char*) line.c_str());
+        r.label = atof((char*) line.c_str());
         line    = "";
       }
       else if(count == 0)
@@ -141,7 +144,7 @@ void FileHandler::read_data(std::ifstream &file, DataFrame *df)
       }
       else
       {
-         r.values.push_back(toDouble((char*) line.substr(0, index).c_str()));
+         r.values.push_back(atof((char*) line.substr(0, index).c_str()));
          line   = line.substr(index + 1);
       }
 
