@@ -19,6 +19,7 @@
       ~GLHandler();
       void plot(DataFrame *df);
       static void drawAxes();
+      static void drawLocalCoordinateAxes();
       static void displayCallback();
       static void mouseCallback(int,int,int,int);
       static void keyboardCallback(unsigned char,int,int);

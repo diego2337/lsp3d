@@ -5,9 +5,9 @@
  * Global variables - needed because GLUT callback functions must be static, and do not accept attributes from GLHandler class
  */
 double **m = NULL;
-double maxX = 0.000000000, maxY = 0.000000000;
+double maxX = 0.000000000, maxY = 0.000000000, maxZ = 0.000000000;
 int mRows = 0, mCols = 0;
-double xPos, yPos, zPos, angle;
+double xPos, yPos, zPos, angle = 0.00000000;
 
 /**
  * @constructor Constructor for GLHandler. Initialize glut callbacks.
@@ -51,7 +51,7 @@ void GLHandler::plot(DataFrame *df)
   yPos = (maxY)/2.0;
   zPos = 3.0;
   // std::cout << "xPos: " << xPos << " yPos: " << yPos << " zPos: " << zPos << " maxX: " << maxX << " maxY: " << maxY << std::endl;
-  gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, 0.0, 0.0, 1.0, 0.0);
+  gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, (maxZ)/2.0, 0.0, 1.0, 0.0);
   // glutIdleFunc(this->displayCallback);
   // glutReshapeFunc(reshapeCallback);
   glutMouseFunc(this->mouseCallback);
@@ -93,6 +93,7 @@ void GLHandler::setPoints(DataFrame *df)
         ((j+1) == (mCols-1)) ? m[i][j] = r.label : m[i][j] = r.values[j];
         if(j == 0 && maxX < m[i][j]) maxX = m[i][j];
         if(j == 1 && maxY < m[i][j]) maxY = m[i][j];
+        if(j == 2 && maxZ < m[i][j]) maxZ = m[i][j];
       }
       // if(maxX < m[i][0]) maxX = m[i][0];
       // if(maxY < m[i][1]) maxY = m[i][1];
@@ -127,6 +128,29 @@ void GLHandler::drawAxes()
 }
 
 /**
+ * @public Draw local coordinates axes, given maxX and maxY values.
+ */
+void GLHandler::drawLocalCoordinateAxes()
+{
+  /** Draw x, y and z axes */
+  glColor3f(0.0, 0.0, 0.0);
+  glBegin(GL_LINES);
+    glVertex3f(0.0 + (maxX/2.0), 0.0 + (maxY/2.0), 0.0 + (maxZ/2.0));
+    glVertex3f(1.0 + (maxX/2.0), 0.0 + (maxY/2.0), 0.0 + (maxZ/2.0));
+  glEnd();
+  glColor3f(0.0, 0.0, 0.0);
+  glBegin(GL_LINES);
+    glVertex3f(0.0 + (maxX/2.0), 0.0 + (maxY/2.0), 0.0 + (maxZ/2.0));
+    glVertex3f(0.0 + (maxX/2.0), 1.0 + (maxY/2.0), 0.0 + (maxZ/2.0));
+  glEnd();
+  glColor3f(0.0, 0.0, 0.0);
+  glBegin(GL_LINES);
+    glVertex3f(0.0 + (maxX/2.0), 0.0 + (maxY/2.0), 0.0 + (maxZ/2.0));
+    glVertex3f(0.0 + (maxX/2.0), 0.0 + (maxY/2.0), 1.0 + (maxZ/2.0));
+  glEnd();
+}
+
+/**
  * @public Display callback function for glutDisplayFunc.
  * @param df DataFrame object containing data resulting from LSP projection.
  */
@@ -156,6 +180,7 @@ void GLHandler::displayCallback()
     // glVertex3f(m[i][0], m[i][1], m[i][2]);
   }
   GLHandler::drawAxes();
+  GLHandler::drawLocalCoordinateAxes();
   // for(double i = 0.0; i < 2 * PI; i += PI / 12)
   // {
   //   glVertex3f(cos(i) * 0.5, sin(i) * 0.5, 0.0);
@@ -191,48 +216,61 @@ void GLHandler::keyboardCallback(unsigned char key, int x, int y)
   {
     /** Pan left */
     case 'a':
+      // glTranslatef()
+      // glRotatef(30.0, (maxX)/2.0, (maxY)/2.0, 0.0);
+      /** Calculate angle between vectors */
+      // angle = acos( ( ((maxX/2.0) - xPos) + ((maxY/2.0) - yPos) + (-zPos) ) / sqrt((xPos * xPos) + (yPos * yPos) + (zPos * zPos)) ) * M_PI;
+      // std::cout << "sin(angle*M_PI): " << sin(angle*M_PI) << " cos(angle*M_PI): " << cos(angle*M_PI) << " angle: " << angle << std::endl;
+      // std::cout << "xPos: " << xPos << " yPos: " << yPos << " zPos: " << zPos << " maxX: " << maxX << " maxY: " << maxY << " angle: " << angle << std::endl;
       glMatrixMode(GL_MODELVIEW);
       glLoadIdentity();
-      // gluLookAt((maxX)/2.0 - 0.1, (maxY)/2.0, 3.0, (maxX)/2.0, (maxY)/2.0, 0.0, 0.0, 1.0, 0.0);
-      xPos = xPos - ((maxX)/2.0 * sin(angle));
-      zPos = zPos - ((maxX)/2.0 * cos(angle));
-      angle = angle + 0.7;
-      // std::cout << "xPos: " << xPos << " yPos: " << yPos << " zPos: " << zPos << " maxX: " << maxX << " maxY: " << maxY << std::endl;
-      // xPos = xPos - 0.1;
-      gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, 0.0, 0.0, 1.0, 0.0);
+      xPos = (maxX * 3 * sin(-angle));
+      zPos = (maxX * 3 * cos(-angle));
+      angle = angle + 0.1;
+      gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, (maxZ)/2.0, 0.0, 1.0, 0.0);
     break;
     /** Pan right */
     case 'd':
       glMatrixMode(GL_MODELVIEW);
       glLoadIdentity();
-      xPos = xPos + ((maxX)/2.0 * sin(angle));
-      zPos = zPos + ((maxX)/2.0 * cos(angle));
-      angle = angle + 0.7;
-      // gluLookAt((maxX)/2.0 + 0.1, (maxY)/2.0, 3.0, (maxX)/2.0, (maxY)/2.0, 0.0, 0.0, 1.0, 0.0);
-      // xPos = xPos + 0.1;
-      gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, 0.0, 0.0, 1.0, 0.0);
+      xPos = (maxX * 3 * sin(angle));
+      zPos = (maxX * 3 * cos(angle));
+      angle = angle + 0.1;
+      gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, (maxZ)/2.0, 0.0, 1.0, 0.0);
+      // (xPos < 0.00000) ? xPos = xPos - ((maxX)/2.0 * sin(angle)) : xPos = xPos + ((maxX)/2.0 * sin(angle));
+      // (zPos < 0.00000) ? zPos = zPos + ((maxX)/2.0 * cos(angle)) : zPos = zPos - ((maxX)/2.0 * cos(angle));
+      // angle = angle + 0.7;
+      // gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, 0.0, 0.0, 1.0, 0.0);
     break;
     /** Pan up */
     case 'w':
       glMatrixMode(GL_MODELVIEW);
       glLoadIdentity();
-      yPos = yPos + ((maxY)/2.0 * sin(angle));
-      zPos = zPos + ((maxY)/2.0 * cos(angle));
-      angle = angle + 0.7;
-      // gluLookAt((maxX)/2.0, (maxY)/2.0 + 0.1, 3.0, (maxX)/2.0, (maxY)/2.0, 0.0, 0.0, 1.0, 0.0);
-      // yPos = yPos + 0.1;
-      gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, 0.0, 0.0, 1.0, 0.0);
+      yPos = (maxY * 3 * sin(angle));
+      zPos = (maxY * 3 * cos(angle));
+      angle = angle + 0.1;
+      gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, (maxZ)/2.0, 0.0, 1.0, 0.0);
+      // yPos = yPos + ((maxY)/2.0 * sin(angle));
+      // zPos = zPos + ((maxY)/2.0 * cos(angle));
+      // angle = angle + 0.7;
+      // // gluLookAt((maxX)/2.0, (maxY)/2.0 + 0.1, 3.0, (maxX)/2.0, (maxY)/2.0, 0.0, 0.0, 1.0, 0.0);
+      // // yPos = yPos + 0.1;
+      // gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, 0.0, 0.0, 1.0, 0.0);
     break;
     /** Pan down */
     case 's':
       glMatrixMode(GL_MODELVIEW);
       glLoadIdentity();
-      yPos = yPos - ((maxY)/2.0 * sin(angle));
-      zPos = zPos - ((maxY)/2.0 * cos(angle));
-      angle = angle + 0.7;
-      // gluLookAt((maxX)/2.0, (maxY)/2.0 - 0.1, 3.0, (maxX)/2.0, (maxY)/2.0, 0.0, 0.0, 1.0, 0.0);
-      // yPos = yPos - 0.1;
-      gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, 0.0, 0.0, 1.0, 0.0);
+      yPos = (maxY * 3 * sin(-angle));
+      zPos = (maxY * 3 * cos(-angle));
+      angle = angle + 0.1;
+      gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, (maxZ)/2.0, 0.0, 1.0, 0.0);
+      // yPos = yPos - ((maxY)/2.0 * sin(angle));
+      // zPos = zPos - ((maxY)/2.0 * cos(angle));
+      // angle = angle + 0.7;
+      // // gluLookAt((maxX)/2.0, (maxY)/2.0 - 0.1, 3.0, (maxX)/2.0, (maxY)/2.0, 0.0, 0.0, 1.0, 0.0);
+      // // yPos = yPos - 0.1;
+      // gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, 0.0, 0.0, 1.0, 0.0);
     break;
     /** Reset camera to default position */
     case 'r':
@@ -241,7 +279,7 @@ void GLHandler::keyboardCallback(unsigned char key, int x, int y)
       xPos = (maxX)/2.0;
       yPos = (maxY)/2.0;
       zPos = 3.0;
-      gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, 0.0, 0.0, 1.0, 0.0);
+      gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, (maxZ)/2.0, 0.0, 1.0, 0.0);
     break;
     default:
     break;
