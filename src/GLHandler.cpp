@@ -104,7 +104,30 @@ void GLHandler::setPoints(DataFrame *df)
 }
 
 /**
- * @public Display callback function for glutDisplayFunc
+ * @public Draw scenes axes.
+ */
+void GLHandler::drawAxes()
+{
+  /** Draw x, y and z axes */
+  glColor3f(1.0, 0.0, 0.0);
+  glBegin(GL_LINES);
+    glVertex3f(0.0, 0.0, 0.0);
+    glVertex3f(1.0, 0.0, 0.0);
+  glEnd();
+  glColor3f(0.0, 1.0, 0.0);
+  glBegin(GL_LINES);
+    glVertex3f(0.0, 0.0, 0.0);
+    glVertex3f(0.0, 1.0, 0.0);
+  glEnd();
+  glColor3f(0.0, 0.0, 1.0);
+  glBegin(GL_LINES);
+    glVertex3f(0.0, 0.0, 0.0);
+    glVertex3f(0.0, 0.0, 1.0);
+  glEnd();
+}
+
+/**
+ * @public Display callback function for glutDisplayFunc.
  * @param df DataFrame object containing data resulting from LSP projection.
  */
 void GLHandler::displayCallback()
@@ -132,6 +155,7 @@ void GLHandler::displayCallback()
     glEnd();
     // glVertex3f(m[i][0], m[i][1], m[i][2]);
   }
+  GLHandler::drawAxes();
   // for(double i = 0.0; i < 2 * PI; i += PI / 12)
   // {
   //   glVertex3f(cos(i) * 0.5, sin(i) * 0.5, 0.0);
@@ -141,7 +165,7 @@ void GLHandler::displayCallback()
 }
 
 /**
- * @public Mouse callback function for glutMouseFunc
+ * @public Mouse callback function for glutMouseFunc.
  * @param button Indicates GLUT_LEFT_BUTTON, GLUT_MIDDLE_BUTTON or GLUT_RIGHT_BUTTON.
  * @param state Indicates GLUT_UP or GLUT_DOWN, being either a mouse press or release, respectively.
  * @param x x coordinates when state changed.
@@ -153,7 +177,7 @@ void GLHandler::mouseCallback(int button, int state, int x, int y)
 }
 
 /**
- * @public Keyboard callback function for glutKeyboardFunc
+ * @public Keyboard callback function for glutKeyboardFunc.
  * @param key ASCII character pressed on keyboard.
  * @param x x coordinates when key was pressed.
  * @param y y coordinates when key was pressed.
@@ -172,7 +196,7 @@ void GLHandler::keyboardCallback(unsigned char key, int x, int y)
       // gluLookAt((maxX)/2.0 - 0.1, (maxY)/2.0, 3.0, (maxX)/2.0, (maxY)/2.0, 0.0, 0.0, 1.0, 0.0);
       xPos = xPos - ((maxX)/2.0 * sin(angle));
       zPos = zPos - ((maxX)/2.0 * cos(angle));
-      angle = angle + 1.0;
+      angle = angle + 0.7;
       // std::cout << "xPos: " << xPos << " yPos: " << yPos << " zPos: " << zPos << " maxX: " << maxX << " maxY: " << maxY << std::endl;
       // xPos = xPos - 0.1;
       gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, 0.0, 0.0, 1.0, 0.0);
@@ -183,7 +207,7 @@ void GLHandler::keyboardCallback(unsigned char key, int x, int y)
       glLoadIdentity();
       xPos = xPos + ((maxX)/2.0 * sin(angle));
       zPos = zPos + ((maxX)/2.0 * cos(angle));
-      angle = angle + 1.0;
+      angle = angle + 0.7;
       // gluLookAt((maxX)/2.0 + 0.1, (maxY)/2.0, 3.0, (maxX)/2.0, (maxY)/2.0, 0.0, 0.0, 1.0, 0.0);
       // xPos = xPos + 0.1;
       gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, 0.0, 0.0, 1.0, 0.0);
@@ -192,9 +216,9 @@ void GLHandler::keyboardCallback(unsigned char key, int x, int y)
     case 'w':
       glMatrixMode(GL_MODELVIEW);
       glLoadIdentity();
-      yPos = yPos + ((maxX)/2.0 * sin(angle));
-      zPos = zPos + ((maxX)/2.0 * cos(angle));
-      angle = angle + 1.0;
+      yPos = yPos + ((maxY)/2.0 * sin(angle));
+      zPos = zPos + ((maxY)/2.0 * cos(angle));
+      angle = angle + 0.7;
       // gluLookAt((maxX)/2.0, (maxY)/2.0 + 0.1, 3.0, (maxX)/2.0, (maxY)/2.0, 0.0, 0.0, 1.0, 0.0);
       // yPos = yPos + 0.1;
       gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, 0.0, 0.0, 1.0, 0.0);
@@ -203,9 +227,9 @@ void GLHandler::keyboardCallback(unsigned char key, int x, int y)
     case 's':
       glMatrixMode(GL_MODELVIEW);
       glLoadIdentity();
-      yPos = yPos - ((maxX)/2.0 * sin(angle));
-      zPos = zPos - ((maxX)/2.0 * cos(angle));
-      angle = angle + 1.0;
+      yPos = yPos - ((maxY)/2.0 * sin(angle));
+      zPos = zPos - ((maxY)/2.0 * cos(angle));
+      angle = angle + 0.7;
       // gluLookAt((maxX)/2.0, (maxY)/2.0 - 0.1, 3.0, (maxX)/2.0, (maxY)/2.0, 0.0, 0.0, 1.0, 0.0);
       // yPos = yPos - 0.1;
       gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, 0.0, 0.0, 1.0, 0.0);
@@ -218,6 +242,7 @@ void GLHandler::keyboardCallback(unsigned char key, int x, int y)
       yPos = (maxY)/2.0;
       zPos = 3.0;
       gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, 0.0, 0.0, 1.0, 0.0);
+    break;
     default:
     break;
   }

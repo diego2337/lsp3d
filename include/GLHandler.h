@@ -18,6 +18,7 @@
       GLHandler(int, char**);
       ~GLHandler();
       void plot(DataFrame *df);
+      static void drawAxes();
       static void displayCallback();
       static void mouseCallback(int,int,int,int);
       static void keyboardCallback(unsigned char,int,int);
