@@ -2,11 +2,12 @@
 #include "../include/DataFrame.h"
 
 /**
- * Global variables
+ * Global variables - needed because GLUT callback functions must be static, and do not accept attributes from GLHandler class
  */
 double **m = NULL;
 double maxX = 0.000000000, maxY = 0.000000000;
 int mRows = 0, mCols = 0;
+double xPos, yPos, zPos, angle;
 
 /**
  * @constructor Constructor for GLHandler. Initialize glut callbacks.
@@ -42,8 +43,15 @@ void GLHandler::plot(DataFrame *df)
   /** Shallow copy incoming DataFrame to GLHandler atributte DataFrame */
   // this->df = df;
   this->setPoints(df);
-  gluLookAt((maxX)/2.0, (maxY)/2.0, 1.0, (maxX)/2.0, (maxY)/2.0, 0.0, 0.0, 1.0, 0.0);
   glutDisplayFunc(this->displayCallback);
+  /** Set camera */
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+  xPos = (maxX)/2.0;
+  yPos = (maxY)/2.0;
+  zPos = 3.0;
+  // std::cout << "xPos: " << xPos << " yPos: " << yPos << " zPos: " << zPos << " maxX: " << maxX << " maxY: " << maxY << std::endl;
+  gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, 0.0, 0.0, 1.0, 0.0);
   // glutIdleFunc(this->displayCallback);
   // glutReshapeFunc(reshapeCallback);
   glutMouseFunc(this->mouseCallback);
@@ -105,6 +113,10 @@ void GLHandler::displayCallback()
   glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
   /** Clear buffer */
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  /** Set projection matrix and frustum */
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  gluPerspective(50.0, 1.0, 1.0, 10.0);
   /** Set scene according to DataFrame object points */
   for(int i = 0; i < mRows; i++)
   {
@@ -155,20 +167,57 @@ void GLHandler::keyboardCallback(unsigned char key, int x, int y)
   {
     /** Pan left */
     case 'a':
-      gluLookAt((maxX)/2.0 - 1.0, (maxY)/2.0, 1.0, (maxX)/2.0, (maxY)/2.0, 0.0, 0.0, 1.0, 0.0);
+      glMatrixMode(GL_MODELVIEW);
+      glLoadIdentity();
+      // gluLookAt((maxX)/2.0 - 0.1, (maxY)/2.0, 3.0, (maxX)/2.0, (maxY)/2.0, 0.0, 0.0, 1.0, 0.0);
+      xPos = xPos - ((maxX)/2.0 * sin(angle));
+      zPos = zPos - ((maxX)/2.0 * cos(angle));
+      angle = angle + 1.0;
+      // std::cout << "xPos: " << xPos << " yPos: " << yPos << " zPos: " << zPos << " maxX: " << maxX << " maxY: " << maxY << std::endl;
+      // xPos = xPos - 0.1;
+      gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, 0.0, 0.0, 1.0, 0.0);
     break;
     /** Pan right */
     case 'd':
-      gluLookAt((maxX)/2.0 + 1.0, (maxY)/2.0, 1.0, (maxX)/2.0, (maxY)/2.0, 0.0, 0.0, 1.0, 0.0);
+      glMatrixMode(GL_MODELVIEW);
+      glLoadIdentity();
+      xPos = xPos + ((maxX)/2.0 * sin(angle));
+      zPos = zPos + ((maxX)/2.0 * cos(angle));
+      angle = angle + 1.0;
+      // gluLookAt((maxX)/2.0 + 0.1, (maxY)/2.0, 3.0, (maxX)/2.0, (maxY)/2.0, 0.0, 0.0, 1.0, 0.0);
+      // xPos = xPos + 0.1;
+      gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, 0.0, 0.0, 1.0, 0.0);
     break;
     /** Pan up */
     case 'w':
-      gluLookAt((maxX)/2.0, (maxY)/2.0 + 1.0, 1.0, (maxX)/2.0, (maxY)/2.0, 0.0, 0.0, 1.0, 0.0);
+      glMatrixMode(GL_MODELVIEW);
+      glLoadIdentity();
+      yPos = yPos + ((maxX)/2.0 * sin(angle));
+      zPos = zPos + ((maxX)/2.0 * cos(angle));
+      angle = angle + 1.0;
+      // gluLookAt((maxX)/2.0, (maxY)/2.0 + 0.1, 3.0, (maxX)/2.0, (maxY)/2.0, 0.0, 0.0, 1.0, 0.0);
+      // yPos = yPos + 0.1;
+      gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, 0.0, 0.0, 1.0, 0.0);
     break;
     /** Pan down */
     case 's':
-      gluLookAt((maxX)/2.0, (maxY)/2.0 - 1.0, 1.0, (maxX)/2.0, (maxY)/2.0, 0.0, 0.0, 1.0, 0.0);
+      glMatrixMode(GL_MODELVIEW);
+      glLoadIdentity();
+      yPos = yPos - ((maxX)/2.0 * sin(angle));
+      zPos = zPos - ((maxX)/2.0 * cos(angle));
+      angle = angle + 1.0;
+      // gluLookAt((maxX)/2.0, (maxY)/2.0 - 0.1, 3.0, (maxX)/2.0, (maxY)/2.0, 0.0, 0.0, 1.0, 0.0);
+      // yPos = yPos - 0.1;
+      gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, 0.0, 0.0, 1.0, 0.0);
     break;
+    /** Reset camera to default position */
+    case 'r':
+      glMatrixMode(GL_MODELVIEW);
+      glLoadIdentity();
+      xPos = (maxX)/2.0;
+      yPos = (maxY)/2.0;
+      zPos = 3.0;
+      gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, 0.0, 0.0, 1.0, 0.0);
     default:
     break;
   }
