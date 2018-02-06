@@ -22,8 +22,13 @@
       static void drawLocalCoordinateAxes();
       static void displayCallback();
       static void mouseCallback(int,int,int,int);
+      static void specialCallback(int, int, int);
       static void keyboardCallback(unsigned char,int,int);
       void setPoints(DataFrame *df);
+      static void rotateLeft();
+      static void rotateRight();
+      static void rotateUp();
+      static void rotateDown();
   private:
       /**
        * @brief Private members and method signatures.
