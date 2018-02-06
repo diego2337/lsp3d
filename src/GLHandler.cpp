@@ -8,6 +8,7 @@ double **m = NULL;
 double maxX = 0.000000000, maxY = 0.000000000, maxZ = 0.000000000;
 int mRows = 0, mCols = 0;
 double xPos, yPos, zPos, angle = 0.00000000;
+char position = '\n';
 
 /**
  * @constructor Constructor for GLHandler. Initialize glut callbacks.
@@ -152,6 +153,82 @@ void GLHandler::drawLocalCoordinateAxes()
 }
 
 /**
+* @public Rotate camera leftwards.
+*/
+void GLHandler::rotateLeft()
+{
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+  // glRotatef(angle, 0.0, 1.0, 0.0);
+  // glTranslatef(0.0, 1.0, 0.0);
+  angle = angle - 0.1;
+  xPos = (maxX * 3 * sin(angle));
+  zPos = (maxX * 3 * cos(angle));
+  std::cout << "angle: " << angle << std::endl;
+  gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, (maxZ)/2.0, 0.0, 1.0, 0.0);
+}
+
+/**
+ * @public Rotate camera rightwards.
+ */
+void GLHandler::rotateRight()
+{
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+  angle = angle + 0.1;
+  xPos = (maxX * 3 * sin(angle));
+  zPos = (maxX * 3 * cos(angle));
+  std::cout << "angle: " << angle << std::endl;
+  gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, (maxZ)/2.0, 0.0, 1.0, 0.0);
+}
+
+/**
+* @public Rotate camera upwards.
+*/
+void GLHandler::rotateUp()
+{
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+  // position == 'u' ? angle = angle + 0.1 : angle = 0.0;
+  // position = 'u';
+  angle = angle + 0.1;
+  yPos = (maxY * 3 * sin(angle));
+  zPos = (maxY * 3 * cos(angle));
+  std::cout << "angle: " << angle << std::endl;
+  gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, (maxZ)/2.0, 0.0, 1.0, 0.0);
+}
+
+/**
+ * @public Rotate camera downwards.
+ */
+void GLHandler::rotateDown()
+{
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+  // position == 'd' ? angle = angle + 0.1 : angle = 0.0;
+  // position = 'd';
+  angle = angle - 0.1;
+  yPos = (maxY * 3 * sin(angle));
+  zPos = (maxY * 3 * cos(angle));
+  std::cout << "angle: " << angle << std::endl;
+  gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, (maxZ)/2.0, 0.0, 1.0, 0.0);
+}
+
+/**
+ * @public Reset camera to original position.
+ */
+void GLHandler::rotateReset()
+{
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+  xPos = (maxX)/2.0;
+  yPos = (maxY)/2.0;
+  zPos = 3.0;
+  angle = 0.0;
+  gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, (maxZ)/2.0, 0.0, 1.0, 0.0);
+}
+
+/**
  * @public Display callback function for glutDisplayFunc.
  * @param df DataFrame object containing data resulting from LSP projection.
  */
@@ -172,13 +249,17 @@ void GLHandler::displayCallback()
     double *vector = mapToColor(m[i][3]);
     glColor3f(vector[0], vector[1], vector[2]);
     delete [] vector;
+    /** Draw spheres with glut */
+    // glPushMatrix();
+    //     glTranslatef(m[i][0], m[i][1], m[i][2]);
+    //     glutSolidSphere(0.01, 10, 10);
+    // glPopMatrix();
     glBegin(GL_POLYGON);
       for(double j = 0.0; j < 2 * M_PI; j += M_PI / 32)
       {
         glVertex3f((cos(j) * 0.01) + m[i][0], (sin(j) * 0.01) + m[i][1], 0.0 + m[i][2]);
       }
     glEnd();
-    // glVertex3f(m[i][0], m[i][1], m[i][2]);
   }
   GLHandler::drawAxes();
   GLHandler::drawLocalCoordinateAxes();
@@ -229,58 +310,6 @@ void GLHandler::mouseCallback(int button, int state, int x, int y)
    }
    glutPostRedisplay();
  }
-
-/**
-* @public Rotate camera leftwards.
-*/
-void GLHandler::rotateLeft()
-{
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-  xPos = (maxX * 3 * sin(-angle));
-  zPos = (maxX * 3 * cos(-angle));
-  angle = angle + 0.1;
-  gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, (maxZ)/2.0, 0.0, 1.0, 0.0);
-}
-
-/**
- * @public Rotate camera rightwards.
- */
-void GLHandler::rotateRight()
-{
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-  xPos = (maxX * 3 * sin(angle));
-  zPos = (maxX * 3 * cos(angle));
-  angle = angle + 0.1;
-  gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, (maxZ)/2.0, 0.0, 1.0, 0.0);
-}
-
-/**
-* @public Rotate camera upwards.
-*/
-void GLHandler::rotateUp()
-{
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-  yPos = (maxY * 3 * sin(angle));
-  zPos = (maxY * 3 * cos(angle));
-  angle = angle + 0.1;
-  gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, (maxZ)/2.0, 0.0, 1.0, 0.0);
-}
-
-/**
- * @public Rotate camera downwards.
- */
-void GLHandler::rotateDown()
-{
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-  yPos = (maxY * 3 * sin(-angle));
-  zPos = (maxY * 3 * cos(-angle));
-  angle = angle + 0.1;
-  gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, (maxZ)/2.0, 0.0, 1.0, 0.0);
-}
 
 /**
  * @public Keyboard callback function for glutKeyboardFunc.
@@ -335,12 +364,7 @@ void GLHandler::keyboardCallback(unsigned char key, int x, int y)
     break;
     /** Reset camera to default position */
     case 'r':
-      glMatrixMode(GL_MODELVIEW);
-      glLoadIdentity();
-      xPos = (maxX)/2.0;
-      yPos = (maxY)/2.0;
-      zPos = 3.0;
-      gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, (maxZ)/2.0, 0.0, 1.0, 0.0);
+      GLHandler::rotateReset();
     break;
     default:
     break;

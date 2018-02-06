@@ -29,6 +29,7 @@
       static void rotateRight();
       static void rotateUp();
       static void rotateDown();
+      static void rotateReset();
   private:
       /**
        * @brief Private members and method signatures.
