@@ -268,6 +268,8 @@ void GLHandler::displayCallback()
     // glEnd();
   }
   glPushMatrix();
+    glRotatef((GLfloat)rotationAngle, 0.0, 1.0, 0.0);
+    glRotatef((GLfloat)rotationAngle2, 1.0, 0.0, 0.0);
     GLHandler::drawAxes();
     // GLHandler::drawLocalCoordinateAxes();
   glPopMatrix();
