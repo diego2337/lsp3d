@@ -6,7 +6,7 @@
  */
 double **m = NULL;
 double maxX = 0.000000000, maxY = 0.000000000, maxZ = 0.000000000;
-int mRows = 0, mCols = 0;
+int mRows = 0, mCols = 0, rotationAngle = 0, rotationAngle2 = 0;
 double xPos, yPos, zPos, angle = 0.00000000;
 char position = '\n';
 
@@ -45,14 +45,6 @@ void GLHandler::plot(DataFrame *df)
   // this->df = df;
   this->setPoints(df);
   glutDisplayFunc(this->displayCallback);
-  /** Set camera */
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-  xPos = (maxX)/2.0;
-  yPos = (maxY)/2.0;
-  zPos = 3.0;
-  // std::cout << "xPos: " << xPos << " yPos: " << yPos << " zPos: " << zPos << " maxX: " << maxX << " maxY: " << maxY << std::endl;
-  gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, (maxZ)/2.0, 0.0, 1.0, 0.0);
   // glutIdleFunc(this->displayCallback);
   // glutReshapeFunc(reshapeCallback);
   glutMouseFunc(this->mouseCallback);
@@ -157,15 +149,14 @@ void GLHandler::drawLocalCoordinateAxes()
 */
 void GLHandler::rotateLeft()
 {
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-  // glRotatef(angle, 0.0, 1.0, 0.0);
-  // glTranslatef(0.0, 1.0, 0.0);
-  angle = angle - 0.1;
-  xPos = (maxX * 3 * sin(angle));
-  zPos = (maxX * 3 * cos(angle));
-  std::cout << "angle: " << angle << std::endl;
-  gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, (maxZ)/2.0, 0.0, 1.0, 0.0);
+  rotationAngle = (rotationAngle - 5) % 360;
+  // glMatrixMode(GL_MODELVIEW);
+  // glLoadIdentity();
+  // angle = angle - 0.1;
+  // xPos = (maxX * 3 * sin(angle));
+  // zPos = (maxX * 3 * cos(angle));
+  // std::cout << "angle: " << angle << std::endl;
+  // gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, (maxZ)/2.0, 0.0, 1.0, 0.0);
 }
 
 /**
@@ -173,13 +164,14 @@ void GLHandler::rotateLeft()
  */
 void GLHandler::rotateRight()
 {
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-  angle = angle + 0.1;
-  xPos = (maxX * 3 * sin(angle));
-  zPos = (maxX * 3 * cos(angle));
-  std::cout << "angle: " << angle << std::endl;
-  gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, (maxZ)/2.0, 0.0, 1.0, 0.0);
+  rotationAngle = (rotationAngle + 5) % 360;
+  // glMatrixMode(GL_MODELVIEW);
+  // glLoadIdentity();
+  // angle = angle + 0.1;
+  // xPos = (maxX * 3 * sin(angle));
+  // zPos = (maxX * 3 * cos(angle));
+  // std::cout << "angle: " << angle << std::endl;
+  // gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, (maxZ)/2.0, 0.0, 1.0, 0.0);
 }
 
 /**
@@ -187,15 +179,16 @@ void GLHandler::rotateRight()
 */
 void GLHandler::rotateUp()
 {
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-  // position == 'u' ? angle = angle + 0.1 : angle = 0.0;
-  // position = 'u';
-  angle = angle + 0.1;
-  yPos = (maxY * 3 * sin(angle));
-  zPos = (maxY * 3 * cos(angle));
-  std::cout << "angle: " << angle << std::endl;
-  gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, (maxZ)/2.0, 0.0, 1.0, 0.0);
+  rotationAngle2 = (rotationAngle2 - 5) % 360;
+  // glMatrixMode(GL_MODELVIEW);
+  // glLoadIdentity();
+  // // position == 'u' ? angle = angle + 0.1 : angle = 0.0;
+  // // position = 'u';
+  // angle = angle + 0.1;
+  // yPos = (maxY * 3 * sin(angle));
+  // zPos = (maxY * 3 * cos(angle));
+  // std::cout << "angle: " << angle << std::endl;
+  // gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, (maxZ)/2.0, 0.0, 1.0, 0.0);
 }
 
 /**
@@ -203,15 +196,16 @@ void GLHandler::rotateUp()
  */
 void GLHandler::rotateDown()
 {
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-  // position == 'd' ? angle = angle + 0.1 : angle = 0.0;
-  // position = 'd';
-  angle = angle - 0.1;
-  yPos = (maxY * 3 * sin(angle));
-  zPos = (maxY * 3 * cos(angle));
-  std::cout << "angle: " << angle << std::endl;
-  gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, (maxZ)/2.0, 0.0, 1.0, 0.0);
+  rotationAngle2 = (rotationAngle2 + 5) % 360;
+  // glMatrixMode(GL_MODELVIEW);
+  // glLoadIdentity();
+  // // position == 'd' ? angle = angle + 0.1 : angle = 0.0;
+  // // position = 'd';
+  // angle = angle - 0.1;
+  // yPos = (maxY * 3 * sin(angle));
+  // zPos = (maxY * 3 * cos(angle));
+  // std::cout << "angle: " << angle << std::endl;
+  // gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, (maxZ)/2.0, 0.0, 1.0, 0.0);
 }
 
 /**
@@ -219,13 +213,15 @@ void GLHandler::rotateDown()
  */
 void GLHandler::rotateReset()
 {
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-  xPos = (maxX)/2.0;
-  yPos = (maxY)/2.0;
-  zPos = 3.0;
-  angle = 0.0;
-  gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, (maxZ)/2.0, 0.0, 1.0, 0.0);
+  rotationAngle = 0;
+  rotationAngle2 = 0;
+  // glMatrixMode(GL_MODELVIEW);
+  // glLoadIdentity();
+  // xPos = (maxX)/2.0;
+  // yPos = (maxY)/2.0;
+  // zPos = 3.0;
+  // angle = 0.0;
+  // gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, (maxZ)/2.0, 0.0, 1.0, 0.0);
 }
 
 /**
@@ -242,6 +238,14 @@ void GLHandler::displayCallback()
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
   gluPerspective(50.0, 1.0, 1.0, 10.0);
+  /** Set camera */
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+  xPos = (maxX)/2.0;
+  yPos = (maxY)/2.0;
+  zPos = 4.0;
+  // std::cout << "xPos: " << xPos << " yPos: " << yPos << " zPos: " << zPos << " maxX: " << maxX << " maxY: " << maxY << std::endl;
+  gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, (maxZ)/2.0, 0.0, 1.0, 0.0);
   /** Set scene according to DataFrame object points */
   for(int i = 0; i < mRows; i++)
   {
@@ -249,20 +253,24 @@ void GLHandler::displayCallback()
     double *vector = mapToColor(m[i][3]);
     glColor3f(vector[0], vector[1], vector[2]);
     delete [] vector;
-    /** Draw spheres with glut */
-    // glPushMatrix();
-    //     glTranslatef(m[i][0], m[i][1], m[i][2]);
-    //     glutSolidSphere(0.01, 10, 10);
-    // glPopMatrix();
-    glBegin(GL_POLYGON);
-      for(double j = 0.0; j < 2 * M_PI; j += M_PI / 32)
-      {
-        glVertex3f((cos(j) * 0.01) + m[i][0], (sin(j) * 0.01) + m[i][1], 0.0 + m[i][2]);
-      }
-    glEnd();
+    /** Draw spheres with glut - First, apply any translation or rotation required, then draw polygon */
+    glPushMatrix();
+        glRotatef((GLfloat)rotationAngle, 0.0, 1.0, 0.0);
+        glRotatef((GLfloat)rotationAngle2, 1.0, 0.0, 0.0);
+        glTranslatef(m[i][0], m[i][1], m[i][2]);
+        glutSolidSphere(0.01, 32, 32);
+    glPopMatrix();
+    // glBegin(GL_POLYGON);
+    //   for(double j = 0.0; j < 2 * M_PI; j += M_PI / 32)
+    //   {
+    //     glVertex3f((cos(j) * 0.01) + m[i][0], (sin(j) * 0.01) + m[i][1], 0.0 + m[i][2]);
+    //   }
+    // glEnd();
   }
-  GLHandler::drawAxes();
-  GLHandler::drawLocalCoordinateAxes();
+  glPushMatrix();
+    GLHandler::drawAxes();
+    // GLHandler::drawLocalCoordinateAxes();
+  glPopMatrix();
   // for(double i = 0.0; i < 2 * PI; i += PI / 12)
   // {
   //   glVertex3f(cos(i) * 0.5, sin(i) * 0.5, 0.0);
