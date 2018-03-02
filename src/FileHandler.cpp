@@ -53,6 +53,9 @@ DataFrame *FileHandler::read_file(char *path)
       this->delimiter = ';';
       this->read_prj_header(file, df);
     }
+    else
+      throw("Incorrect file type.");
+    
 
     this->read_data(file, df);
     file.close();
