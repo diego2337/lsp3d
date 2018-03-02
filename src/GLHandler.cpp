@@ -5,7 +5,7 @@
  * Global variables - needed because GLUT callback functions must be static, and do not accept attributes from GLHandler class
  */
 double **m = NULL;
-double maxX = 0.000000000, maxY = 0.000000000, maxZ = 0.000000000;
+double maxX = -1000000.000, maxY = -1000000.000, maxZ = -1000000.000, minX = 1000000.000, minY = 1000000.000, minZ = 1000000.000;
 int mRows = 0, mCols = 0, rotationAngle = 0, rotationAngle2 = 0;
 double xPos, yPos, zPos, angle = 0.00000000;
 char position = '\n';
@@ -44,6 +44,12 @@ void GLHandler::plot(DataFrame *df)
   /** Shallow copy incoming DataFrame to GLHandler atributte DataFrame */
   // this->df = df;
   this->setPoints(df);
+  /** Set projection matrix and frustum */
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  // gluPerspective(50.0, 1.0, 1.0, 15.0);
+  std::cout << minX << " " << maxX << " " << minY << " " << maxY << " " << minZ << " " << maxZ << std::endl;
+  glFrustum(minX, maxX, minY, maxY, 1, 10);
   glutDisplayFunc(this->displayCallback);
   // glutIdleFunc(this->displayCallback);
   // glutReshapeFunc(reshapeCallback);
@@ -73,6 +79,12 @@ void GLHandler::setPoints(DataFrame *df)
   /** Only set points if DataFrame object is pointing to a DataFrame object containing data points */
   if(df)
   {
+    maxX = df->getMaxX();
+    maxY = df->getMaxY();
+    maxZ = df->getMaxZ();
+    minX = df->getMinX();
+    minY = df->getMinY();
+    minZ = df->getMinZ();
     /** Assigning values to global matrix due to static callback function */
     mRows = df->get_config_numRows();
     m = new double*[mRows];
@@ -85,9 +97,12 @@ void GLHandler::setPoints(DataFrame *df)
       for(j = 0; j < mCols-1; j++)
       {
         ((j+1) == (mCols-1)) ? m[i][j] = r.label : m[i][j] = r.values[j];
-        if(j == 0 && maxX < m[i][j]) maxX = m[i][j];
-        if(j == 1 && maxY < m[i][j]) maxY = m[i][j];
-        if(j == 2 && maxZ < m[i][j]) maxZ = m[i][j];
+        // if(j == 0 && maxX < m[i][j]) maxX = m[i][j];
+        // if(j == 0 && minX > m[i][j]) minX = m[i][j];
+        // if(j == 1 && maxY < m[i][j]) maxY = m[i][j];
+        // if(j == 1 && minY > m[i][j]) minY = m[i][j];
+        // if(j == 2 && maxZ < m[i][j]) maxZ = m[i][j];
+        // if(j == 2 && minZ > m[i][j]) minZ = m[i][j];
       }
       // if(maxX < m[i][0]) maxX = m[i][0];
       // if(maxY < m[i][1]) maxY = m[i][1];
@@ -234,29 +249,32 @@ void GLHandler::displayCallback()
   glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
   /** Clear buffer */
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  /** Set projection matrix and frustum */
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-  gluPerspective(50.0, 1.0, 1.0, 10.0);
   /** Set camera */
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
   xPos = (maxX)/2.0;
   yPos = (maxY)/2.0;
-  zPos = 4.0;
-  // std::cout << "xPos: " << xPos << " yPos: " << yPos << " zPos: " << zPos << " maxX: " << maxX << " maxY: " << maxY << std::endl;
-  gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, (maxZ)/2.0, 0.0, 1.0, 0.0);
+  zPos = 5;
+
+  std::cout << "xPos: " << xPos << " yPos: " << yPos << " zPos: " << zPos << " maxX: " << maxX << " minX: " << minX << "maxY: " << maxY << " minY: " << minY << " minZ: " << minZ << " maxZ: " << maxZ << std::endl;
+  // gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, (maxZ)/2.0, 0.0, 1.0, 0.0);
+  gluLookAt(xPos, yPos, zPos, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
   /** Set scene according to DataFrame object points */
   for(int i = 0; i < mRows; i++)
   {
     /** Set initial drawing color */
     double *vector = mapToColor(m[i][3]);
+    // glColor3f(0.0,0.0,1.0);
     glColor3f(vector[0], vector[1], vector[2]);
+    // std::cout << vector[0] << " " << vector[1] << " " << vector[2] << std::endl;
     delete [] vector;
     /** Draw spheres with glut - First, apply any translation or rotation required, then draw polygon */
     glPushMatrix();
         glRotatef((GLfloat)rotationAngle, 0.0, 1.0, 0.0);
         glRotatef((GLfloat)rotationAngle2, 1.0, 0.0, 0.0);
+        // std::cout << "m[i][0]: " << normalizeValue(minX, maxX, m[i][0]) << " m[i][1]: " << normalizeValue(minY, maxY, m[i][1]) << " m[i][2]: " << normalizeValue(minZ, maxZ, m[i][2]) << std::endl;
+        // glTranslatef(normalizeValue(minX, maxX, m[i][0]), normalizeValue(minY, maxY, m[i][1]), normalizeValue(minZ, maxZ, m[i][2]));
+        // std::cout << "m[i][0]: " << m[i][0] << " m[i][1]: " << m[i][1] << " m[i][2]: " << m[i][2] << std::endl;
         glTranslatef(m[i][0], m[i][1], m[i][2]);
         glutSolidSphere(0.01, 32, 32);
     glPopMatrix();

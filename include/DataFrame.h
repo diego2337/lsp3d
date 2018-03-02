@@ -28,6 +28,13 @@ class DataFrame
     int get_config_numCols() const;
     int get_config_numRows() const;
 
+    double getMaxX() const;
+    double getMaxY() const;
+    double getMaxZ() const;
+    double getMinX() const;
+    double getMinY() const;
+    double getMinZ() const;
+
     void set_matrixType(char *v);
     void set_config_numCols(int v);
     void set_config_numRows(int v);
@@ -41,6 +48,7 @@ class DataFrame
     std::string matrixType;
     int config_numCols;
     int config_numRows;
+    double maxX, maxY, maxZ, minX, minY, minZ;
     std::vector<row> rows;
 };
 

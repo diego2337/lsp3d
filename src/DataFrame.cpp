@@ -2,7 +2,8 @@
 
 DataFrame::DataFrame()
 {
-
+  this->maxX = this->maxY = this->maxZ = -1000000.00000;
+  this->minX = this->minY = this->minZ = 1000000.00000;
 }
 
 DataFrame::~DataFrame()
@@ -53,8 +54,45 @@ void DataFrame::set_config_numRows(int v)
   this->config_numRows = v;
 }
 
+double DataFrame::getMaxX() const
+{
+  return this->maxX;
+}
+
+double DataFrame::getMaxY() const
+{
+  return this->maxY;
+}
+
+double DataFrame::getMaxZ() const
+{
+  return this->maxZ;
+}
+
+double DataFrame::getMinX() const
+{
+  return this->minX;
+}
+
+double DataFrame::getMinY() const
+{
+  return this->minY;
+}
+
+double DataFrame::getMinZ() const
+{
+  return this->minZ;
+}
+
 int DataFrame::insert_row(row &r)
 {
+  /** Check to see maximum and minimum values */
+  if(this->minX > r.values[0]) this->minX = r.values[0];
+  if(this->maxX < r.values[0]) this->maxX = r.values[0];
+  if(this->minY > r.values[1]) this->minY = r.values[1];
+  if(this->maxY < r.values[1]) this->maxY = r.values[1];
+  if(this->minZ > r.values[2]) this->minZ = r.values[2];
+  if(this->maxZ < r.values[2]) this->maxZ = r.values[2];
   if( (int) r.values.size() + 2 == this->get_config_numCols())
     this->rows.push_back(r);
   else
@@ -67,6 +105,7 @@ void DataFrame::validate() const
 {
   if(this->get_numCols() != this->get_config_numCols())
     throw "Wrong column number.";
+    // std::cout << this->get_numRows() << " " << this->get_config_numRows() << std::endl;
   if(this->get_numRows() != this->get_config_numRows())
     throw "Wrong row number.";
 }
