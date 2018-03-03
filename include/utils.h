@@ -25,4 +25,12 @@ double toDouble(char *number);
  */
 double *mapToColor(double number);
 
+/**
+ * @public Normalize values between [0,1].
+ * @param {double} minNumber Minimum number from dataset.
+ * @param {double} maxNumber Maximum number from dataset.
+ * @param {double} value Value to be normalized.
+ * @returns {double} normalized value.
+ */
+double normalizeValue(double minNumber, double maxNumber, double value);
 #endif

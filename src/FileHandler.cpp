@@ -55,7 +55,7 @@ DataFrame *FileHandler::read_file(char *path)
     }
     else
       throw("Incorrect file type.");
-    
+
 
     this->read_data(file, df);
     file.close();

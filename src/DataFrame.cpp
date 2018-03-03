@@ -108,6 +108,27 @@ void DataFrame::validate() const
     // std::cout << this->get_numRows() << " " << this->get_config_numRows() << std::endl;
   if(this->get_numRows() != this->get_config_numRows())
     throw "Wrong row number.";
+  /** Normalize values */
+  for(int i = 0; i < this->get_config_numRows(); i++)
+  {
+    row r = this->get_row(i);
+    for(unsigned int j = 0; j < r.values.size(); j++)
+    {
+      switch(j)
+      {
+        case 0:
+          r.values[i] = normalizeValue(this->minX, this->maxX, r.values[i]);
+        break;
+        case 1:
+          r.values[i] = normalizeValue(this->minY, this->maxY, r.values[i]);
+        break;
+        case 2:
+          r.values[i] = normalizeValue(this->minZ, this->maxZ, r.values[i]);
+        break;
+      }
+      // std::cout << r.values[i] << std::endl;
+    }
+  }
 }
 
 row DataFrame::get_row(int i) const

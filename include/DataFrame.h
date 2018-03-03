@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <string>
 #include <vector>
+#include "utils.h"
 
   /**
    * @struct Struct containing rows names and coordinates

@@ -49,7 +49,9 @@ void GLHandler::plot(DataFrame *df)
   glLoadIdentity();
   // gluPerspective(50.0, 1.0, 1.0, 15.0);
   std::cout << minX << " " << maxX << " " << minY << " " << maxY << " " << minZ << " " << maxZ << std::endl;
-  glFrustum(minX, maxX, minY, maxY, 1, 10);
+  // glFrustum(minX, maxX, minY, maxY, 1, 10);
+  glFrustum(-1, 1, -1, 1, 1, 10);
+  // glOrtho(minX, maxX, minY, maxY, 1, 5);
   glutDisplayFunc(this->displayCallback);
   // glutIdleFunc(this->displayCallback);
   // glutReshapeFunc(reshapeCallback);
@@ -252,11 +254,11 @@ void GLHandler::displayCallback()
   /** Set camera */
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
-  xPos = (maxX)/2.0;
-  yPos = (maxY)/2.0;
-  zPos = 5;
+  xPos = 0;
+  yPos = 0;
+  zPos = 2.1;
 
-  std::cout << "xPos: " << xPos << " yPos: " << yPos << " zPos: " << zPos << " maxX: " << maxX << " minX: " << minX << "maxY: " << maxY << " minY: " << minY << " minZ: " << minZ << " maxZ: " << maxZ << std::endl;
+  // std::cout << "xPos: " << xPos << " yPos: " << yPos << " zPos: " << zPos << " maxX: " << maxX << " minX: " << minX << "maxY: " << maxY << " minY: " << minY << " minZ: " << minZ << " maxZ: " << maxZ << std::endl;
   // gluLookAt(xPos, yPos, zPos, (maxX)/2.0, (maxY)/2.0, (maxZ)/2.0, 0.0, 1.0, 0.0);
   gluLookAt(xPos, yPos, zPos, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
   /** Set scene according to DataFrame object points */
