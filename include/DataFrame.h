@@ -41,8 +41,9 @@ class DataFrame
     void set_config_numRows(int v);
 
     int insert_row(row &r);
-    void validate() const;
+    void validate();
     row get_row(int i) const;
+    row *getReferenceRow(int i);
 
     void print_row(int i) const;
   private:

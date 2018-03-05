@@ -59,7 +59,19 @@ DataFrame *FileHandler::read_file(char *path)
 
     this->read_data(file, df);
     file.close();
+    // std::cout << "BEFORE:" << std::endl;
+    // for(int i = 0; i < df->get_config_numRows(); i++)
+    // {
+    //   df->print_row(i);
+    // }
+    // std::cout << "BEFORE:" << std::endl;
     df->validate();
+    // std::cout << "AFTER:" << std::endl;
+    // for(int i = 0; i < df->get_config_numRows(); i++)
+    // {
+    //   df->print_row(i);
+    // }
+    // std::cout << "AFTER:" << std::endl;
   }
 
   return df;

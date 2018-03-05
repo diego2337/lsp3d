@@ -147,5 +147,6 @@ double *mapToColor(double number)
  */
 double normalizeValue(double minNumber, double maxNumber, double value)
 {
-  return ((abs(value) - abs(minNumber))/(abs(maxNumber) - abs(minNumber)) + 0.1);
+  // return fabs((fabs(value) - fabs(minNumber))/(fabs(maxNumber) - fabs(minNumber) + 0.1));
+  return (((value) - (minNumber))/((maxNumber) - (minNumber) + 0.1));
 }

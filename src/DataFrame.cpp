@@ -101,7 +101,7 @@ int DataFrame::insert_row(row &r)
 return this->rows.size() - 1;
 }
 
-void DataFrame::validate() const
+void DataFrame::validate()
 {
   if(this->get_numCols() != this->get_config_numCols())
     throw "Wrong column number.";
@@ -109,25 +109,30 @@ void DataFrame::validate() const
   if(this->get_numRows() != this->get_config_numRows())
     throw "Wrong row number.";
   /** Normalize values */
+  row *r;
   for(int i = 0; i < this->get_config_numRows(); i++)
   {
-    row r = this->get_row(i);
-    for(unsigned int j = 0; j < r.values.size(); j++)
+    r = (row*)malloc(sizeof(row));
+    r = this->getReferenceRow(i);
+    for(unsigned int j = 0; j < r->values.size(); j++)
     {
       switch(j)
       {
         case 0:
-          r.values[i] = normalizeValue(this->minX, this->maxX, r.values[i]);
+          r->values[j] = normalizeValue(this->minX, this->maxX, r->values[j]);
         break;
         case 1:
-          r.values[i] = normalizeValue(this->minY, this->maxY, r.values[i]);
+          r->values[j] = normalizeValue(this->minY, this->maxY, r->values[j]);
         break;
         case 2:
-          r.values[i] = normalizeValue(this->minZ, this->maxZ, r.values[i]);
+          r->values[j] = normalizeValue(this->minZ, this->maxZ, r->values[j]);
+        break;
+        default:
         break;
       }
-      // std::cout << r.values[i] << std::endl;
     }
+    // free(r);
+    r = NULL;
   }
 }
 
@@ -135,6 +140,19 @@ row DataFrame::get_row(int i) const
 {
   if(i < this->get_numRows())
     return this->rows[i];
+  else
+    throw "Wrong data index.";
+}
+
+/**
+ * @public Returns reference to row.
+ * @param {int} i index for row position.
+ * @returns {row*} Reference to row.
+ */
+row *DataFrame::getReferenceRow(int i)
+{
+  if(i < this->get_numRows())
+    return &this->rows[i];
   else
     throw "Wrong data index.";
 }

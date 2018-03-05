@@ -1,6 +1,7 @@
 #ifndef _UTILS_H_
 #include <cstdlib>
 #include <cstring>
+#include <cmath>
 
 void free_string(char **str);
 
