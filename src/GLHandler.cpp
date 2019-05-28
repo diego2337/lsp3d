@@ -48,7 +48,7 @@ void GLHandler::plot(DataFrame *df)
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
   // gluPerspective(50.0, 1.0, 1.0, 15.0);
-  std::cout << minX << " " << maxX << " " << minY << " " << maxY << " " << minZ << " " << maxZ << std::endl;
+  // std::cout << minX << " " << maxX << " " << minY << " " << maxY << " " << minZ << " " << maxZ << std::endl;
   // glFrustum(minX, maxX, minY, maxY, 1, 10);
   glFrustum(-1, 1, -1, 1, 1, 10);
   // glOrtho(minX, maxX, minY, maxY, 1, 5);
@@ -64,11 +64,11 @@ void GLHandler::plot(DataFrame *df)
 }
 
 /** TODO - function to delete - just for testing */
-double fRand(double fMin, double fMax)
-{
-    double f = (double)rand() / RAND_MAX;
-    return fMin + f * (fMax - fMin);
-}
+// double fRand(double fMin, double fMax)
+// {
+//     double f = (double)rand() / RAND_MAX;
+//     return fMin + f * (fMax - fMin);
+// }
 
 /**
  * @public Set points resulting from LSP projection in OpenGL scene.
